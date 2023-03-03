@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .parent {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1px 1px;
+        }
+
+        .item {
+            background-color: lightskyblue;
+            border: 1px solid #fff;
+            padding: 5px 5px 5px 2em;
+            min-height: 250px;
+        }
+    </style>
+</head>
+
+<body style="font-family: sans-serif">
+    <div style="margin-left: 10%;width: 75%;margin-right: auto">
+        <h2>Car's 'R' Us Client Demo - Version poor ;-)</h2>
+        <div class="parent">
+            <div class="item">
+                <h3>Show all Cars</h3>
+                <button id="btn-get-all">Get all</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Brand</th>
+                            <th>Price pr day</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+            <div class="item">
+                <h3>Find a single Car</h3>
+                <label for="text-for-id">Id</label>&nbsp;<input id="text-for-id" />
+                <button id="btn-get-car">Find</button>
+                <p id="model"></p>
+                <p id="brand"></p>
+                <p id="ppd"></p>
+            </div>
+            <div class="item">
+                <h3>Add a Car</h3>
+                <div><label for="input-field1">Model</label>&nbsp;<input id="input-field1" /></div>
+                <div><label for="input-field2">Brand</label>&nbsp;<input id="input-field2" /></div>
+                <div><label for="input-field3">PPD</label>&nbsp;<input id="input-field3" /></div>
+                <button id="submit-car">Submit new item</button>
+                <p id="added-model"></p>
+                <p id="added-brand"></p>
+                <p id="added-ppd"></p>
+            </div>
+            <div class="item">
+                <h3>Edit a Car</h3>
+                <label for="text-for-id2">Id</label>&nbsp;<input id="text-for-id2" />
+                <button id="btn-find-car-to-edit">Find item to edit</button>
+                <div>
+                    <label for="text-for-model">Model</label>&nbsp;<input id="text-for-model" />
+                    <label for="text-for-brand">brand</label>&nbsp;<input id="text-for-brand" />
+                    <label for="text-for-ppd">ppd</label>&nbsp;<input id="text-for-ppd" />
+                </div>
+                <button id="submit-edited-car">Submit edited item</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+
+        document.getElementById("btn-get-all").addEventListener("click", getCars)
+        document.getElementById("btn-get-car").addEventListener("click", getCar)
+        document.getElementById("btn-find-car-to-edit").addEventListener("click", getCarToEdit)
+        document.getElementById("submit-car").addEventListener("click", addCar)
+        document.getElementById("submit-edited-car").addEventListener("click", submitEdittedCar)
+
+        function getCars(evt) {
+            evt.preventDefault()
+            fetch("http://localhost:8080/api/cars", {
+            }).then(res => {
+                return res.json()
+            }).then(data => {
+                carsHTML(data)
+            }) //.catch to error handle
+        }
+
+        function getCar(evt) {
+            evt.preventDefault()
+            let field = document.getElementById("text-for-id").value
+            fetch("http://localhost:8080/api/cars/" + field, {
+            }).then(res => {
+                if(res.ok) {
+                    return res.json()
+                }
+            }).then(data => {
+                carHTML(data)
+            }).catch(error => {
+                document.getElementById("model").innerHTML = "No car by this ID"
+            })
+        }
+
+        function getCarToEdit(evt) {
+            evt.preventDefault()
+            let field = document.getElementById("text-for-id2").value
+            fetch("http://localhost:8080/api/cars/" + field, {
+            }).then(res => {
+                if(res.ok) {
+                    return res.json()
+                }
+            }).then(data => {
+                carToEditHTML(data)
+            }).catch(error => {
+                document.getElementById("model").innerHTML = "No car by this ID"
+            })
+        }
+        
+        
+        function addCar(evt) {
+            evt.preventDefault()
+            let model = document.getElementById("input-field1").value 
+            let brand = document.getElementById("input-field2").value 
+            let ppd = document.getElementById("input-field3").value 
+            
+            fetch("http://localhost:8080/api/cars", {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body : JSON.stringify({
+                    model: model,
+                    brand: brand,
+                    pricePerDay: ppd
+                })
+            
+            }).then(res => {
+                return res.json()
+            }).then(data => {
+                addedCarHTML(data)
+            })
+
+
+        }
+
+
+        function submitEdittedCar(evt) {
+            evt.preventDefault()
+            
+            let id = document.getElementById("text-for-id2").value 
+            let model = document.getElementById("text-for-model").value 
+            let brand = document.getElementById("text-for-brand").value 
+            let ppd = document.getElementById("text-for-ppd").value 
+            
+            fetch("http://localhost:8080/api/cars/" + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body : JSON.stringify({
+                    model: model,
+                    brand: brand,
+                    pricePerDay: ppd
+                })
+            
+            }).then(res => {
+                return res.json()
+            }).then(data => {
+            })
+
+
+        }
+
+
+
+
+        function carsHTML(cars) {
+            let carHTML = cars.map(car => 
+                "<tr>" +
+                    "<td>"+ car.model +"</td>" +
+                    "<td>"+ car.brand +"</td>" +
+                    "<td>"+ car.pricePerDay +"</td>" +
+                "</tr>"
+                ).join("")
+                document.getElementById("tbody").innerHTML = carHTML
+        }
+
+
+
+        function carHTML(car) {
+            document.getElementById("model").innerHTML = "model: " + 
+            "<span>"+ car.model +"</span>"
+            document.getElementById("brand").innerHTML = "brand: " +
+            "<span>"+ car.brand +"</span>"
+            document.getElementById("ppd").innerHTML = "Price per day: " +
+            "<span>"+ car.pricePerDay +"</span>"
+        }
+
+        function carToEditHTML(car) {
+            document.getElementById("text-for-model").value =car.model
+            document.getElementById("text-for-brand").value = car.brand
+            document.getElementById("text-for-ppd").value= car.pricePerDay
+        }
+
+
+        function addedCarHTML(car) {
+            document.getElementById("added-model").innerHTML = "model: " + 
+            "<span>"+ car.model +"</span>"
+            document.getElementById("added-brand").innerHTML = "brand: " +
+            "<span>"+ car.brand +"</span>"
+            document.getElementById("added-ppd").innerHTML = "Price per day: " +
+            "<span>"+ car.pricePerDay +"</span>"
+        }
+
+
+    </script>
+</body>
+
+</html>

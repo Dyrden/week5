@@ -1,0 +1,38 @@
+
+
+
+<head>
+    <style>
+        .my-div {width: 25px; height: 25px;background-color:rgb(38, 225, 131); margin:1px;}
+      </style>     
+</head>
+
+<body>
+
+    <div id="outer">
+        <div id="div1" class="my-div"></div>
+        <div id="div2" class="my-div"></div>
+        <div id="div3" class="my-div"></div>
+        <div id="div4" class="my-div"></div>
+        <div id="div5" class="my-div"></div>
+        <div id="div6" class="my-div"></div>
+        <div id="div7" class="my-div"></div>
+        <div id="div8" class="my-div"></div>
+        <div id="div9" class="my-div"></div>
+        <div id="div10" class="my-div"></div>
+        <p id="text"></p>
+    </div>
+
+x
+    <script>
+        document.getElementById("outer").addEventListener("click", myFunction)
+
+        function myFunction(e) {
+            const target = e.target
+            document.getElementById("text").innerHTML = target.id
+        }
+
+    </script>
+
+
+</body>

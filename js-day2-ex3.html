@@ -1,0 +1,70 @@
+
+
+<body>
+
+    
+    <input id="load" type="button" value="load data">
+    <ul id="list"></ul>
+    
+    <form>
+        <input id="name" type="text">
+        <input id="addName" type="button" value="Add name">
+        <input id="removeFirst" type="button" value="Remove the first name">
+        <input id="removeLast" type="button" value="Remove the last name">
+    </form>
+    
+    
+    <script>
+        const names = ["Matilde" ,"Tove" , "Jørgen", "Ole"]
+
+
+        document.getElementById("load").addEventListener("click", loadData)
+        document.getElementById("addName").addEventListener("click", addName)
+        document.getElementById("removeFirst").addEventListener("click", removeFirst)
+        document.getElementById("removeLast").addEventListener("click", removeLast)
+
+
+        function loadData() {
+            const list = names.map(n => `<li>${encode(n)}</li>`).join("")
+            document.getElementById("list").innerHTML = list
+        }
+
+
+        function addName(e) {
+            e.preventDefault()
+            const name = document.getElementById("name").value
+            names.push(encode(name))
+            loadData()
+        }
+
+        function removeFirst(e) {
+            e.preventDefault
+            names.shift()
+            loadData()
+
+        }
+           
+        function removeLast(e) {
+            e.preventDefault
+            names.pop()
+            loadData()
+
+        }
+
+
+        function encode(str) {
+            str = str.replace(/&/g, "&amp;");
+            str = str.replace(/>/g, "&gt;");
+            str = str.replace(/</g, "&lt;");
+            str = str.replace(/"/g, "&quot;");
+            str = str.replace(/'/g, "&#039;");
+            return str;
+        }
+
+
+
+
+
+
+    </script>
+</body>

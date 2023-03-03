@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <h2>gnomed</h2>
+    <form id="form" v>
+        <div id="div1" style="width: 100px;margin: 1px;">&nbsp;</div>
+        <div id="div2" style="width: 100px;margin: 1px;">&nbsp;</div>
+        <div id="div3" style="width: 100px;margin: 1px;">&nbsp;</div>
+        <input id="btn" type="button" value="a button!">
+    </form>
+
+
+
+    <script>
+        const colors = ["red", "black", "blue", "green", "purple", "pink", "yellow", "white"]
+        const usedColors = []
+
+        divs = document.querySelectorAll("div")
+        divs.forEach(e => e.style.backgroundColor = "black")
+
+        const btn = document.getElementById("btn")
+        btn.addEventListener("click", myHandler)
+
+        function myHandler(e) {
+            divs.forEach(e => switchColor(e))
+        }
+
+        function switchColor(e) {
+            document.getElementById("div1").style.backgroundColor = "red"
+            document.getElementById("div2").style.backgroundColor = "green"
+            document.getElementById("div3").style.backgroundColor = "blue"
+        }
+
+
+        function switchRandomColor(e) {
+            const color = colors[Math.floor(Math.random()*colors.length)]
+            const index = colors.indexOf(color)
+            
+            if (!usedColors.includes(color)) {
+                if (e.style.backgroundColor != '') {
+                    const previousColor = e.style.backgroundColor
+                    colors.push(previousColor)
+                    const prevIndex = usedColors.indexOf(previousColor)
+                    usedColors.splice(prevIndex,1)
+                }
+
+                usedColors.push(color)
+                colors.splice(index,1)
+                e.style.backgroundColor = color
+
+                console.log(colors)
+                console.log(usedColors)
+
+            } 
+        }
+    </script>
+
+</body>
+</html>
