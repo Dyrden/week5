@@ -93,14 +93,16 @@
 
         function getCar(evt) {
             evt.preventDefault()
-            let field = document.getElementById("text-for-id").value
-            fetch("http://localhost:8080/api/cars/" + field, {
+            let id = document.getElementById("text-for-id").value
+            fetch("http://localhost:8080/api/cars/" + id, {
             }).then(res => {
                 if(res.ok) {
                     return res.json()
                 }
             }).then(data => {
+
                 carHTML(data)
+            
             }).catch(error => {
                 document.getElementById("model").innerHTML = "No car by this ID"
             })
